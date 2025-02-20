@@ -1,6 +1,14 @@
-import { expect } from "@std/expect";
-import { add } from "./main.ts";
+import { describe, it } from "jsr:@std/testing/bdd";
 
-Deno.test(function addTest() {
-  expect(add(2, 3)).toBe(5);
-});
+import { superoak } from "@x/superoak";
+import app from "./main.ts";
+
+
+// FIXME: gives error becuase not closing server
+describe("server working", () => {
+
+  it("the heartbeat is heard", async () => {
+    const request = await superoak(app);
+    request.get("/api/heartbeat").expect("Alive");
+  })
+})

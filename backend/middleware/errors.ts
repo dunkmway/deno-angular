@@ -1,5 +1,5 @@
-import { bold, cyan, green, red } from "jsr:@std/fmt/colors";
-import { Context, HttpError, Next, Status } from "jsr:@oak/oak";
+import { bold, red } from "@std/fmt/colors";
+import { Context, HttpError, Next, Status } from "@oak/oak";
 
 export async function handleErrors(context: Context, next: Next) {
   try {
@@ -34,35 +34,5 @@ export async function handleErrors(context: Context, next: Next) {
       console.log("Unhandled Error:", red(bold(e.message)));
       console.log(e.stack);
     }
-  }
-}
-
-export async function logRequests(context: Context, next: Next) {
-  await next();
-  const rt = context.response.headers.get("X-Response-Time");
-  console.log(
-    `${green(context.request.method)} ${cyan(context.request.url.pathname)} - ${
-      bold(
-        String(rt),
-      )
-    }`,
-  );
-}
-
-export async function setResponseTimeHeader(context: Context, next: Next) {
-  const start = Date.now();
-  await next();
-  const ms = Date.now() - start;
-  context.response.headers.set("X-Response-Time", `${ms}ms`);
-}
-
-export async function sendStaticContent(context: Context, next: Next) {
-  try {
-    await context.send({
-      root: `../frontend/dist/frontend/browser`,
-      index: "index.html",
-    });
-  } catch {
-    await next();
   }
 }

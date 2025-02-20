@@ -13,7 +13,7 @@ export class AppComponent {
 
   handlePing() {
     if (this.message() == 'Ping') {
-      fetch('/api/ping')
+      fetch('/api/heartbeat')
       .then(response => response.json())
       .then(data => this.message.set(data.message));
     } else {

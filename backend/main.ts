@@ -1,14 +1,11 @@
-import { bold, yellow } from "jsr:@std/fmt/colors";
-import { Application } from "jsr:@oak/oak";
+import { bold, yellow } from "@std/fmt/colors";
+import { Application } from "@oak/oak";
 
-import {
-  handleErrors,
-  logRequests,
-  sendStaticContent,
-  setResponseTimeHeader,
-} from "./middleware.ts";
+import { handleErrors } from "./middleware/errors.ts";
+import { logRequests } from "./middleware/logging.ts";
+import { setResponseTimeHeader } from "./middleware/response-time.ts";
 
-import { pingRouter } from "./routes/ping.ts";
+import heartbeatRouter from "./routes/heartbeat.ts";
 
 const app = new Application();
 
@@ -18,14 +15,27 @@ app.use(logRequests); // Logger
 app.use(setResponseTimeHeader); // Response Time
 
 // handle api routes
-app.use(pingRouter.routes());
-app.use(pingRouter.allowedMethods());
+app.use(heartbeatRouter.routes());
+app.use(heartbeatRouter.allowedMethods());
 
 // Send static content
-app.use(sendStaticContent);
+app.use(async (context, next) => {
+  try {
+    await context.send({
+      root: `dist/browser`,
+      index: "index.html",
+    });
+  } catch {
+    await next();
+  }
+});
 
 app.addEventListener("listen", ({ hostname, port }) => {
   console.log(bold("Start listening on ") + yellow(`${hostname}:${port}`));
 });
 
-await app.listen({ port: 8000 });
+if (import.meta.main) {
+  await app.listen({ port: 8000 });
+}
+
+export default app;

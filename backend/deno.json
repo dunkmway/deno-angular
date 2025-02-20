@@ -1,10 +1,13 @@
 {
   "tasks": {
-    "dev": "deno run --watch --allow-net main.ts"
+    "dev": "deno run --watch --allow-net=:8000 --allow-read=dist/browser main.ts",
+    "start": "deno run --allow-net=:8000 --allow-read=dist/browser main.ts"
   },
   "imports": {
     "@oak/oak": "jsr:@oak/oak@^17.1.4",
     "@std/expect": "jsr:@std/expect@^1.0.13",
-    "@std/fmt": "jsr:@std/fmt@^1.0.5"
+    "@std/fmt": "jsr:@std/fmt@^1.0.5",
+    "@std/testing": "jsr:@std/testing@^1.0.9",
+    "@x/superoak": "https://deno.land/x/superoak@4.8.1/mod.ts"
   }
 }
