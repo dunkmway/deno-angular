@@ -8,13 +8,9 @@ import {
   setResponseTimeHeader,
 } from "./middleware.ts";
 
-import { pingRouter } from "./ping.ts";
+import { pingRouter } from "./routes/ping.ts";
 
 const app = new Application();
-// const angularApp = new AngularAppEngine();
-
-/** * This is a request handler used by the Angular CLI (dev-server and during build). */
-// createRequestHandler(async (req: Request) =>  await angularApp.handle(req));
 
 // Middleware
 app.use(handleErrors); // Handle errors
