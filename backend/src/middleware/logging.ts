@@ -1,5 +1,5 @@
-import { bold, cyan, green, } from "@std/fmt/colors";
-import { Context, Next, } from "@oak/oak";
+import { bold, cyan, green } from "@std/fmt/colors";
+import { Context, Next } from "@oak/oak";
 
 export async function logRequests(context: Context, next: Next) {
   await next();
