@@ -4,6 +4,7 @@
     "angular.ng-template",
     "denoland.vscode-deno",
     "ms-azuretools.vscode-docker",
-    "Prisma.prisma"
+    "Prisma.prisma",
+    "EthanSK.restore-terminals"
   ]
 }

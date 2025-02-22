@@ -1,0 +1,27 @@
+{
+  "artificialDelayMilliseconds": 1000,
+  "keepExistingTerminalsOpen": false,
+  "runOnStartup": true,
+  "terminals": [
+    {
+      "splitTerminals": [
+        {
+          "name": "docker",
+          "commands": ["docker compose up"]
+        }
+      ]
+    },
+    {
+      "splitTerminals": [
+        {
+          "name": "backend",
+          "commands": ["cd backend", "deno task dev"]
+        },
+        {
+          "name": "frontend",
+          "commands": ["cd frontend", "ng serve"]
+        }
+      ]
+    }
+  ]
+}
