@@ -3,6 +3,8 @@
     "dev": "deno run --watch --allow-net=:8000 --allow-read=dist/browser ./src/main.ts",
     "start": "deno run --allow-net=:8000 --allow-read=dist/browser ./src/main.ts",
 
+    "generate:route": "deno run -A ./cli/generateRoute.ts",
+
     "prisma": "deno run -A npm:prisma",
     "prisma:migrate": "deno task prisma migrate dev && deno task prisma:patch",
     "prisma:studio": "deno task prisma studio",

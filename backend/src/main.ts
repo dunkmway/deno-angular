@@ -5,7 +5,7 @@ import { handleErrors } from "./middleware/errors.ts";
 import { logRequests } from "./middleware/logging.ts";
 import { setResponseTimeHeader } from "./middleware/response-time.ts";
 
-import heartbeatRouter from "./routes/heartbeat.ts";
+import api from "./routes/api.ts";
 
 const app = new Application();
 
@@ -15,8 +15,7 @@ app.use(logRequests); // Logger
 app.use(setResponseTimeHeader); // Response Time
 
 // handle api routes
-app.use(heartbeatRouter.routes());
-app.use(heartbeatRouter.allowedMethods());
+app.use(api.routes(), api.allowedMethods())
 
 // Send static content
 app.use(async (context, next) => {
