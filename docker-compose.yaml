@@ -32,6 +32,7 @@ services:
 
   keycloak:
     image: quay.io/keycloak/keycloak:latest
+    platform: linux/amd64 # This is required for M4 Macs
     container_name: keycloak
     restart: unless-stopped
     environment:
