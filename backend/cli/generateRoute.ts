@@ -7,23 +7,18 @@ async function generateRoute(routeName: string) {
   const testFile = `${routeDir}/${routeName}.test.ts`;
 
   const routeContent = `
-import { Context, Next, Router } from "jsr:@oak/oak";
+import { createEndpoint } from "../api.types.ts";
 
-export const get${captializeRouteName} = {
+export const get${captializeRouteName} = createEndpoint({
+  method: "get",
   path: "/",
-  middleware: (ctx: Context, next: Next): void => {
+  middleware: (ctx, next): void => {
     next();
   },
-  handler: (ctx: Context): void => {
+  handler: (ctx): void => {
     ctx.response.status = 501;
   }
-}
-
-const ${routeName} = new Router();
-
-${routeName}.get(get${captializeRouteName}.path, get${captializeRouteName}.middleware, get${captializeRouteName}.handler);
-
-export default ${routeName};
+});
 `;
 
   const testContent = `
@@ -34,11 +29,10 @@ import { testing } from "@oak/oak";
 import { get${captializeRouteName} } from "./${routeName}.ts";
 
 describe("get ${routeName}", () => {
-  it("has been configured", () => {
-    const ctx = testing.createMockContext();
+  const ctx = testing.createMockContext<"/">();
+  it("has been implemented", () => {
     get${captializeRouteName}.handler(ctx);
-
-    expect(false).toBeTruthy()
+    expect(ctx.response.status).not.toBe(501);
   });
 })
 `;
@@ -52,29 +46,24 @@ describe("get ${routeName}", () => {
 }
 
 async function updateRouterFile(routeName: string) {
-  const ROUTER_FILE = "src/routes/api.ts";
+  const captializeRouteName = routeName.charAt(0).toUpperCase() + routeName.substring(1);
+  const ROUTER_FILE = "src/routes/api.routes.ts";
   let routerContent = await Deno.readTextFile(ROUTER_FILE);
-
-  // Check if route is already included
-  if (routerContent.includes(`import ${routeName} from`)) {
-    console.log(`Route '${routeName}' is already registered.`);
-    return;
-  }
 
   // Insert import statement
   routerContent = routerContent.replace(
-    "// New route import will be appended here (DO NOT REMOVE)",
-    `import ${routeName} from "./${routeName}/${routeName}.ts";\n// New route import will be appended here (DO NOT REMOVE)`
+    /(^import.*$)(?!\n^import.*$)/gm,
+    `$1\nimport { get${captializeRouteName} } from "./${routeName}/${routeName}.ts";`
   );
 
-  // Insert api.use() statement before `export default api;`
+  // Insert route object
   routerContent = routerContent.replace(
-    "// New route will be appended here (DO NOT REMOVE)",
-    `api.use("/${routeName}", ${routeName}.routes(), ${routeName}.allowedMethods());\n// New route will be appended here (DO NOT REMOVE)`
+    /({\s*(?:[^{}]|\{[^{}]*\})*\s*})$/gm,
+    `$1,\n\t{\n\t\tpath: "/${routeName}",\n\t\tendpoints: [\n\t\t\tget${captializeRouteName}\n\t\t]\n\t}`
   );
 
   await Deno.writeTextFile(ROUTER_FILE, routerContent);
-  console.log(`Updated 'api.ts' to include '${routeName}' route.`);
+  console.log(`Updated 'api.routes.ts' to include '${routeName}' route.`);
 }
 
 

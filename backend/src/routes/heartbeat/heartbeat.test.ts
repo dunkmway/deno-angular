@@ -6,9 +6,9 @@ import { getHeartbeat } from "./heartbeat.ts";
 
 describe("get heartbeat", () => {
   it("responds with Alive", () => {
-    const ctx = testing.createMockContext();
+    const ctx = testing.createMockContext<"/">();
     getHeartbeat.handler(ctx);
 
-    expect(ctx.response.body).toMatchObject({ message: "Alive" })
+    expect(ctx.response.body).toMatchObject({ message: "Alive" });
   });
-})
+});

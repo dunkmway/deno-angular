@@ -18,4 +18,5 @@
 ## Organization of the Backend
 - I like putting the routes in their own folder so we can have the tests next to the handlers
 - Not sure if I like the weird object thing that has the path, middleware, and handler all bundled.
+- I made the object thing a little more manageable by wrapping it all in an Angular inspired routes file. I really feel like it is overkill and isn't worth it. Might just go back to doing it exactly has oak intends for it to be done. We still need to solve the export problem so that the handler (and probably the middleware as well) is testable in another file. It is nice to have everything all wrapped up and to have all of the routes organized all in one place with explicit reference to all the routes. The solution is just really complex for what it is doing. Will need to talk to the team about it and see if there is another way of doing this.
 - Doing some weird things with custom generate commands

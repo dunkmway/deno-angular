@@ -5,7 +5,8 @@ import { handleErrors } from "./middleware/errors.ts";
 import { logRequests } from "./middleware/logging.ts";
 import { setResponseTimeHeader } from "./middleware/response-time.ts";
 
-import api from "./routes/api.ts";
+import { Router } from "jsr:@oak/oak";
+import { routes } from "./routes/api.routes.ts";
 
 const app = new Application();
 
@@ -15,7 +16,23 @@ app.use(logRequests); // Logger
 app.use(setResponseTimeHeader); // Response Time
 
 // handle api routes
-app.use(api.routes(), api.allowedMethods())
+const api = new Router({
+  prefix: "/api",
+});
+
+routes.forEach((route) => {
+  const router = new Router();
+  for (const endpoint of Object.values(route.endpoints)) {
+    router[endpoint.method](
+      endpoint.path,
+      endpoint.middleware,
+      endpoint.handler,
+    );
+  }
+  api.use(route.path, router.routes(), router.allowedMethods());
+});
+
+app.use(api.routes(), api.allowedMethods());
 
 // Send static content
 app.use(async (context, next) => {
