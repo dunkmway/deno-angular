@@ -1,11 +1,10 @@
 import { bold, yellow } from "@std/fmt/colors";
-import { Application } from "@oak/oak";
+import { Application, Router } from "@oak/oak";
 
 import { handleErrors } from "./middleware/errors.ts";
 import { logRequests } from "./middleware/logging.ts";
 import { setResponseTimeHeader } from "./middleware/response-time.ts";
 
-import { Router } from "jsr:@oak/oak";
 import { routes } from "./routes/api.routes.ts";
 
 const app = new Application();
